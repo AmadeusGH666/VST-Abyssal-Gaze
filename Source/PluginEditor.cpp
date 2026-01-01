@@ -13,21 +13,31 @@
 
 //==============================================================================
 AbyssalGazeNewAudioProcessorEditor::AbyssalGazeNewAudioProcessorEditor (AbyssalGazeNewAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p)
+    : AudioProcessorEditor (&p), audioProcessor (p), visualizer(p.currentRMS)
 {
     // 1. Load Asset
-    // Using absolute path as found in the workspace. In a real project, this should be a BinaryResource.
-    // For now, we load from file.
     juce::File bgFile("d:/AI/antigravity/VST 20260101/background3transeye.png");
+    juce::Image bgImage;
     if (bgFile.existsAsFile())
     {
-        backgroundImage = juce::ImageFileFormat::loadFrom(bgFile);
+        bgImage = juce::ImageFileFormat::loadFrom(bgFile);
     }
+    backgroundComponent.setImage(bgImage);
+    backgroundComponent.setImagePlacement(juce::RectanglePlacement::stretchToFit);
+    backgroundComponent.setInterceptsMouseClicks(false, false);
 
     // 2. Setup LookAndFeel
     juce::LookAndFeel::setDefaultLookAndFeel(&abyssalLookAndFeel);
 
-    // 3. Setup Controls
+    // 3. Add Components (Layering Order: Bottom -> Top)
+    
+    // Layer 1: Visualizer
+    addAndMakeVisible(visualizer);
+
+    // Layer 2: Background Image (Overlay)
+    addAndMakeVisible(backgroundComponent);
+
+    // Layer 3: Controls
     auto setupSlider = [&](juce::Slider& slider, const juce::String& id) {
         slider.setSliderStyle(juce::Slider::RotaryHorizontalVerticalDrag);
         slider.setTextBoxStyle(juce::Slider::NoTextBox, false, 0, 0);
@@ -80,26 +90,13 @@ AbyssalGazeNewAudioProcessorEditor::~AbyssalGazeNewAudioProcessorEditor()
 
 void AbyssalGazeNewAudioProcessorEditor::paint (juce::Graphics& g)
 {
-    // Layer 1: Visualizer (Placeholder for now, centered at 400, 300)
+    // Layer 0: Background Fill (Black)
     g.setColour(juce::Colours::black);
     g.fillAll();
     
-    g.setColour(juce::Colours::darkred);
-    g.fillEllipse(350, 250, 100, 100); // Simple "Blood Red" center
-
-    // Layer 2: Background Image
-    if (backgroundImage.isValid())
-    {
-        // Scale to fit 800x600
-        g.drawImage(backgroundImage, getLocalBounds().toFloat());
-    }
-    else
-    {
-        g.setColour(juce::Colours::red);
-        g.drawText("Background Image Not Found", getLocalBounds(), juce::Justification::centred);
-    }
-
-    // Layer 3: Controls are drawn by themselves on top
+    // Layer 1: Visualizer (Handled by VisualizerComponent)
+    // Layer 2: Background Image (Handled by backgroundComponent)
+    // Layer 3: Controls (Handled by child components)
     
     // Draw Black Plug for Revelation Menu (since it's transparent now)
     // Center: x=218, y=291. Diameter: 42px (Radius 21px).
@@ -140,4 +137,12 @@ void AbyssalGazeNewAudioProcessorEditor::resized()
 
     // 8. Tremor (Bottom-Left) Center: x=280, y=397
     setBoundsCenter(tremorSlider, 280, 397);
+
+    // Visualizer Bounds
+    // Center: x=417, y=284. Max Bounds: Width=250, Height=180.
+    // Top-Left = (417 - 125, 284 - 90) = (292, 194)
+    visualizer.setBounds(292, 194, 250, 180);
+
+    // Background Image Bounds
+    backgroundComponent.setBounds(0, 0, 800, 600);
 }

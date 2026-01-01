@@ -65,6 +65,9 @@ public:
     static const juce::String id_tremor;
     static const juce::String id_revelation;
 
+    // Audio Metering
+    std::atomic<float> currentRMS { 0.0f };
+
 private:
     //==============================================================================
     juce::AudioProcessorValueTreeState::ParameterLayout createParameterLayout();

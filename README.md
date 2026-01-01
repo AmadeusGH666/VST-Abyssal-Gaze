@@ -21,7 +21,14 @@ A dark, industrial, eldritch horror audio effect plugin built with JUCE.
 
 ## Changelog
 
-### V0.3.0 (Current)
+### V0.4.0 (Current)
+- **Living Visualizer**: Implemented a "Living Pupil" effect in the center abyss.
+    - **Audio Reactive**: Pulses based on real-time audio RMS levels.
+    - **Visual Style**: Radial gradient (Bright Blood Red core to Dark Red edge).
+    - **Layering**: Correctly positioned behind the background image holes.
+- **Version Bump**: Project version updated to 0.4.0.
+
+### V0.3.0
 - **UI Polish**: Reduced visual knob diameter to 42px (4px margin) for a tighter look.
 - **Pointer Refinement**: Thinned the red pointer to 2.0f thickness.
 - **Menu Style**: Matched the Revelation menu background size to the new 42px knob size.
@@ -68,6 +75,13 @@ A dark, industrial, eldritch horror audio effect plugin built with JUCE.
 3. 在 `build/AbyssalGazeNew_artefacts/Release/VST3/` 中找到 VST3 文件。
 
 ## 更新日志 (Changelog)
+
+### V0.4.0 (当前版本)
+- **动态视觉效果**：在中心深渊实现了 "Living Pupil" (活体瞳孔) 效果。
+    - **音频响应**：根据实时音频 RMS 电平进行脉动。
+    - **视觉风格**：径向渐变（中心为明亮的血红色，边缘为暗红色）。
+    - **图层叠加**：正确放置在背景图像孔洞的后方。
+- **版本升级**：项目版本更新至 0.4.0。
 
 ### V0.3.0 (当前版本)
 - **UI 润色**：将视觉旋钮直径减小至 42px (4px 边距)，外观更紧凑。

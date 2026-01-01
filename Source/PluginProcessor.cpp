@@ -316,6 +316,14 @@ void AbyssalGazeNewAudioProcessor::processBlock (juce::AudioBuffer<float>& buffe
             wet[i] = dry[i] * (1.0f - drownVal) + wet[i] * drownVal;
         }
     }
+
+    // Calculate RMS for Visualizer
+    float rms = buffer.getRMSLevel(0, 0, buffer.getNumSamples());
+    if (totalNumOutputChannels > 1)
+    {
+        rms = juce::jmax(rms, buffer.getRMSLevel(1, 0, buffer.getNumSamples()));
+    }
+    currentRMS.store(rms);
 }
 
 //==============================================================================

@@ -1,0 +1,30 @@
+# Build directories
+build/
+Builds/
+cmake-build-*/
+
+# IDE directories
+.vs/
+.vscode/
+*.xcodeproj/
+*.xcworkspace/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.log
+*.tlog
+*.obj
+*.pdb
+*.idb
+*.ilk
+*.pch
+*.ipch
+*.aps
+*.user
+
+# Python (if relevant)
+__pycache__/
+*.pyc

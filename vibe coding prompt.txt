@@ -1,0 +1,159 @@
+prompt V0 (initial)
+**Subject: Develop "Abyssal Gaze NEW" VST3 Plugin - Bio-Mechanical Cthulhu Theme**
+
+**Role**: You are an expert C++ Audio Developer specializing in the JUCE Framework. You are building a VST3 plugin called **"Abyssal Gaze NEW"**,using JUCE and CMAKE.
+
+**Project Vibe**: Dark, Industrial, Eldritch Horror, Bio-mechanical.
+
+---
+
+### 1. Global Settings & Assets (SCALED)
+
+*   **Window Size**: Fixed at **800 x 600 px**.
+*   **Asset**: `backgroundtranseye.png` (Original size ~2281x1707).
+    *   **Crucial**: The center abyss area AND **ALL 8 surrounding eye pupils** have been knocked out (transparent alpha).
+    *   **Scaling**: The image must be scaled down to fit the 800x600 window completely (approx 0.35x scale).
+*   **Knob Size Strategy**:
+    *   **Scaled Hole Size**: The pupil holes on the UI will be approx **35-40px** wide after scaling.
+    *   **Component Size**: Set Component bounds to **50 x 50 px** (Safety margin).
+    *   **Visual Knob**: The actual drawing should be approx **36px** centered within the component.
+
+---
+
+### 2. The Visual Architecture (Layering)
+
+*   **Layering (Z-Order)**:
+    1.  **Bottom**: Procedural "Blood Red" Audio Visualizer centered at (400, 300).
+    2.  **Middle**: `backgroundtranseye.png` overlay.
+    3.  **Top**: 7 Knobs and 1 Menu (filling the 8 holes).
+
+*   **Custom LookAndFeel (`AbyssalLook`)**:
+    *   **The "Plug" Logic**: First draw a **Solid Opaque Black Circle** filling the entire 50x50 bounds to block the hole.
+    *   **The Knob**: Draw the rotary indicator slightly smaller on top.
+    *   **Style**: Pure Black background, Dark Grey body, Blood Red (`0xFFFF0000`) pointer.
+
+---
+
+### 3. Controls & Layout (Precise Mapping)
+
+**Coordinate System**: Positions are relative percentages (0.0 - 1.0).
+
+**Parameter Map (Clockwise from 9:00):**
+
+1.  **Revelation (Left Eye @ 9:00)**:
+    *   **Type**: Preset Menu (ComboBox).
+    *   **Pos**: x=0.12, y=0.50.
+    *   **Style**: **Opaque Black Background**. Red text. No borders.
+    *   **UPDATED Preset Names**:
+        1. Void Walker
+        2. Neural Snap
+        3. Steam Hammer
+        4. Black Hole
+        5. Heartbeat
+        6. Rusty Gears
+        7. Ghost Pipe
+        8. Engine Fail
+        9. Dark Mass
+        10. Abyssal Gaze
+
+2.  **Corruption (Top-Left @ 10:30)**: [Distortion] Pos: x=0.23, y=0.26.
+3.  **Drown (Top @ 12:00)**: [Dry/Wet Mix] Pos: x=0.50, y=0.16.
+4.  **Obscura (Top-Right @ 1:30)**: [Filter Cutoff] Pos: x=0.77, y=0.26.
+5.  **VOID (Right @ 3:00)**: [Reverb Size] Pos: x=0.88, y=0.50.
+6.  **Erosion (Bottom-Right @ 4:30)**: [Bitcrush] Pos: x=0.77, y=0.74.
+7.  **Whispers (Bottom @ 6:00)**: [Delay Feedback] Pos: x=0.50, y=0.84.
+8.  **Tremor (Bottom-Left @ 7:30)**: [Tremolo Rate] Pos: x=0.23, y=0.74.
+
+---
+
+### 4. Audio Engine & Logic (The Data Table)
+
+**File**: `PluginProcessor.cpp`
+**Chain**: `Input -> [Corruption] -> [Obscura] -> [Erosion] -> [Tremor] -> [Whispers] -> [VOID] -> [Drown] -> Output`
+
+**PRESET DATA LOGIC (Crucial)**:
+Create a struct or array to store these exact values. When a preset is selected, map these integer values (scale 1-10) to the normalized float parameters (0.0f - 1.0f).
+
+| Preset Name | Corruption | Drown | Obscura | VOID | Erosion | Whispers | Tremor |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **01. Void Walker** | 4 | 8 | 2 | 10 | 2 | 6 | 2 |
+| **02. Neural Snap** | 9 | 5 | 8 | 1 | 10 | 1 | 9 |
+| **03. Steam Hammer** | 8 | 3 | 4 | 2 | 5 | 3 | 4 |
+| **04. Black Hole** | 2 | 9 | 1 | 10 | 3 | 9 | 1 |
+| **05. Heartbeat** | 3 | 4 | 2 | 3 | 1 | 2 | 3 |
+| **06. Rusty Gears** | 7 | 4 | 5 | 3 | 8 | 4 | 5 |
+| **07. Ghost Pipe** | 3 | 6 | 4 | 8 | 4 | 7 | 3 |
+| **08. Engine Fail** | 8 | 6 | 4 | 2 | 7 | 2 | 7 |
+| **09. Dark Mass** | 5 | 7 | 2 | 8 | 2 | 5 | 2 |
+| **10. Abyssal Gaze**| 6 | 6 | 5 | 7 | 4 | 5 | 4 |
+
+---
+
+### 5. Implementation Steps for AI
+
+1.  **Header**: Create `AbyssalLookAndFeel.h` (Black Plate logic).
+2.  **Processor**:
+    *   Define APVTS parameters (`id_corruption`, `id_drown`, etc.).
+    *   **Implement the Preset Data Table** above. Add a listener to the Menu parameter to trigger value updates.
+3.  **DSP**: Connect the chain. Map `Obscura` (Filter) such that 1 = Closed/Dark, 10 = Open/Bright.
+4.  **Editor**:
+    *   Load/scale `backgroundtranseye.png`.
+    *   Place knobs/menu using the coordinates.
+    *   Apply LookAndFeel.
+
+**Let's code "Abyssal Gaze NEW".**
+
+--------------
+prompt V0.1 把按钮从灰色改为黑色
+### 1. Fix Knob Style (Make them BLACK)
+The knobs currently appear Grey. They must be **Opaque Pure Black** to blend with the background holes.
+*   **Action**: In `AbyssalLookAndFeel::drawRotarySlider`:
+    *   Ensure the main ellipse fill color is `juce::Colours::black` (0xFF000000).
+    *   Remove any grey outline or gradient that might be causing the grey look.
+    *   Keep the Red pointer.
+-------------
+
+
+
+V0.2 修正按钮坐标和大小
+measure pos data
+Window Size: 800 x 600
+Hole Diameter: ______ px (比如 40)
+Menu (Left): X=218, Y=291    hole diameter: W=41 H=33
+Corruption (Top-Left): X=274 hole diameter:  Y=182   W=34 H=33
+Drown (Top): X=420, Y=122  hole diameter: W=44 H=36
+Obscura (Top-Right): X=565, Y=174   hole diameter: W=36 H=33
+VOID (Right): X=620, Y=290  hole diameter:  W=37 H=33
+Erosion (Bottom-Right): X=561, Y=397  hole diameter: W=34 H=30
+Whispers (Bottom): X=420, Y=437  hole diameter: W=39 H=30
+Tremor (Bottom-Left): X=280, Y=397 hole diameter: W=35 H=34
+
+prompt V0.2
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

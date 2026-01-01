@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.15)
 
-project(AbyssalGazeNew VERSION 0.1.0)
+project(AbyssalGazeNew VERSION 0.2.0)
 
 # Add JUCE
 # Using FetchContent to get JUCE. You can also point this to your local JUCE installation.

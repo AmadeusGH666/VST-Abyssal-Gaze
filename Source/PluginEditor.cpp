@@ -44,7 +44,7 @@ AbyssalGazeNewAudioProcessorEditor::AbyssalGazeNewAudioProcessorEditor (AbyssalG
 
     // Revelation (Menu)
     revelationBox.setJustificationType(juce::Justification::centred);
-    revelationBox.setColour(juce::ComboBox::backgroundColourId, juce::Colours::black);
+    revelationBox.setColour(juce::ComboBox::backgroundColourId, juce::Colours::transparentBlack);
     revelationBox.setColour(juce::ComboBox::textColourId, juce::Colours::red);
     revelationBox.setColour(juce::ComboBox::arrowColourId, juce::Colours::red);
     revelationBox.setColour(juce::ComboBox::outlineColourId, juce::Colours::transparentBlack);
@@ -100,49 +100,44 @@ void AbyssalGazeNewAudioProcessorEditor::paint (juce::Graphics& g)
     }
 
     // Layer 3: Controls are drawn by themselves on top
+    
+    // Draw Black Plug for Revelation Menu (since it's transparent now)
+    // Center: x=218, y=291. Bounds: 50x50.
+    g.setColour(juce::Colours::black);
+    g.fillEllipse(218 - 25, 291 - 25, 50, 50);
 }
 
 void AbyssalGazeNewAudioProcessorEditor::resized()
 {
-    // Coordinate System: Positions are relative percentages (0.0 - 1.0).
+    // Exact Layout Logic (V0.2)
     // Component Size: 50 x 50 px
+    // Coordinates are CENTER POINTS (cx, cy). Top-left = cx - 25, cy - 25.
     
-    auto setBoundsRel = [&](juce::Component& comp, float xRel, float yRel) {
-        int w = 50;
-        int h = 50;
-        int x = (int)(xRel * 800.0f) - w / 2;
-        int y = (int)(yRel * 600.0f) - h / 2;
-        comp.setBounds(x, y, w, h);
+    auto setBoundsCenter = [&](juce::Component& comp, int cx, int cy) {
+        comp.setBounds(cx - 25, cy - 25, 50, 50);
     };
 
-    // 1. Revelation (Left Eye @ 9:00)
-    // Pos: x=0.12, y=0.50
-    // Note: ComboBox might need to be wider than 50px to show text?
-    // User said "Component Size: Set Component bounds to 50 x 50 px (Safety margin)."
-    // But for a menu, 50px is small. However, "The Plug Logic" implies it fills the hole.
-    // I will stick to 50x50 as requested, maybe the text will be small or clipped, or it's just a click target.
-    // Actually, for a ComboBox, it usually draws a box.
-    // Let's stick to the requested bounds.
-    setBoundsRel(revelationBox, 0.12f, 0.50f);
+    // 1. Revelation (Menu - Left) Center: x=218, y=291
+    setBoundsCenter(revelationBox, 218, 291);
 
-    // 2. Corruption (Top-Left @ 10:30) Pos: x=0.23, y=0.26.
-    setBoundsRel(corruptionSlider, 0.23f, 0.26f);
+    // 2. Corruption (Top-Left) Center: x=274, y=182
+    setBoundsCenter(corruptionSlider, 274, 182);
 
-    // 3. Drown (Top @ 12:00) Pos: x=0.50, y=0.16.
-    setBoundsRel(drownSlider, 0.50f, 0.16f);
+    // 3. Drown (Top) Center: x=420, y=122
+    setBoundsCenter(drownSlider, 420, 122);
 
-    // 4. Obscura (Top-Right @ 1:30) Pos: x=0.77, y=0.26.
-    setBoundsRel(obscuraSlider, 0.77f, 0.26f);
+    // 4. Obscura (Top-Right) Center: x=565, y=174
+    setBoundsCenter(obscuraSlider, 565, 174);
 
-    // 5. VOID (Right @ 3:00) Pos: x=0.88, y=0.50.
-    setBoundsRel(voidSlider, 0.88f, 0.50f);
+    // 5. VOID (Right) Center: x=620, y=290
+    setBoundsCenter(voidSlider, 620, 290);
 
-    // 6. Erosion (Bottom-Right @ 4:30) Pos: x=0.77, y=0.74.
-    setBoundsRel(erosionSlider, 0.77f, 0.74f);
+    // 6. Erosion (Bottom-Right) Center: x=561, y=397
+    setBoundsCenter(erosionSlider, 561, 397);
 
-    // 7. Whispers (Bottom @ 6:00) Pos: x=0.50, y=0.84.
-    setBoundsRel(whispersSlider, 0.50f, 0.84f);
+    // 7. Whispers (Bottom) Center: x=420, y=437
+    setBoundsCenter(whispersSlider, 420, 437);
 
-    // 8. Tremor (Bottom-Left @ 7:30) Pos: x=0.23, y=0.74.
-    setBoundsRel(tremorSlider, 0.23f, 0.74f);
+    // 8. Tremor (Bottom-Left) Center: x=280, y=397
+    setBoundsCenter(tremorSlider, 280, 397);
 }

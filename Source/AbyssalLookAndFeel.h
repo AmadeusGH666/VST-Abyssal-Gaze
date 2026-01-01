@@ -24,26 +24,31 @@ public:
     void drawRotarySlider(juce::Graphics& g, int x, int y, int width, int height, float sliderPos,
         const float rotaryStartAngle, const float rotaryEndAngle, juce::Slider& slider) override
     {
-        auto bounds = juce::Rectangle<int>(x, y, width, height).toFloat();
-        auto center = bounds.getCentre();
-        auto radius = juce::jmin(bounds.getWidth(), bounds.getHeight()) / 2.0f;
+        // V0.3 Logic: Apply margin to shrink circle
+        float margin = 4.0f; // Reduces diameter from 50px -> 42px
+        float diameter = juce::jmin(width, height) - (margin * 2.0f);
+        float radius = diameter * 0.5f;
+        float centerX = x + width * 0.5f;
+        float centerY = y + height * 0.5f;
+        auto center = juce::Point<float>(centerX, centerY);
 
         // 1. The "Plug" Logic: Solid Opaque Black Circle
         g.setColour(juce::Colours::black);
-        g.fillEllipse(center.x - radius, center.y - radius, radius * 2.0f, radius * 2.0f);
+        g.fillEllipse(centerX - radius, centerY - radius, diameter, diameter);
 
-        // 2. The Knob Body: Opaque Black
-        float knobRadius = radius * 0.76f; // 38px / 50px = 0.76
-        g.setColour(juce::Colours::black);
-        g.fillEllipse(center.x - knobRadius, center.y - knobRadius, knobRadius * 2.0f, knobRadius * 2.0f);
-
+        // 2. The Knob Body: Opaque Black (Same as plug, but maybe we want a visual distinction? 
+        // User said "Draw the Black Circle using this reduced radius". 
+        // So the "Plug" and "Body" are essentially the same circle now, or the Plug fills the hole and Body is smaller?
+        // User said: "Knob Diameter... reduces diameter from 50px -> 42px... Draw the Black Circle using this reduced radius".
+        // This implies the visual knob IS the 42px circle. The 50px component bounds just center it.
+        
         // 3. The Pointer: Blood Red
         auto angle = rotaryStartAngle + sliderPos * (rotaryEndAngle - rotaryStartAngle);
-        float pointerLength = knobRadius * 0.8f;
-        float pointerThickness = 4.0f;
+        float pointerLength = radius * 0.8f; // Shorter than radius
+        float pointerThickness = 2.0f;       // Thinner
 
         juce::Path p;
-        p.addRectangle(-pointerThickness * 0.5f, -knobRadius, pointerThickness, pointerLength);
+        p.addRectangle(-pointerThickness * 0.5f, -radius, pointerThickness, pointerLength);
         p.applyTransform(juce::AffineTransform::rotation(angle).translated(center));
 
         g.setColour(juce::Colour(0xFFFF0000)); // Blood Red

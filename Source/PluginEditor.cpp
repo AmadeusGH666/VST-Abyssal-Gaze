@@ -102,9 +102,9 @@ void AbyssalGazeNewAudioProcessorEditor::paint (juce::Graphics& g)
     // Layer 3: Controls are drawn by themselves on top
     
     // Draw Black Plug for Revelation Menu (since it's transparent now)
-    // Center: x=218, y=291. Bounds: 50x50.
+    // Center: x=218, y=291. Diameter: 42px (Radius 21px).
     g.setColour(juce::Colours::black);
-    g.fillEllipse(218 - 25, 291 - 25, 50, 50);
+    g.fillEllipse(218 - 21, 291 - 21, 42, 42);
 }
 
 void AbyssalGazeNewAudioProcessorEditor::resized()

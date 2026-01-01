@@ -37,36 +37,35 @@ public:
 
     void paint(juce::Graphics& g) override
     {
-        // "Living Pupil" Logic
-        // Center: x=417, y=284 (Relative to parent, but this component will be placed at 0,0 of parent? 
-        // No, better to place this component covering the hole or the whole window?
-        // User said "Center Point: x=417, y=284. Max Bounds: Width=250, Height=180".
-        // Let's make the component bounds 250x180 centered at 417,284.
-        // So inside paint, center is local center.
-        
         auto bounds = getLocalBounds().toFloat();
         auto center = bounds.getCentre();
         
+        // Enhanced Dynamics (V0.5)
+        // Use sqrt to make it more sensitive to lower volumes
+        float sensitivity = std::sqrt(smoothedRMS); 
+        
         // Dynamic Radius
-        // Base size: 30%
-        // Max size: 100%
-        float minRadius = juce::jmin(bounds.getWidth(), bounds.getHeight()) * 0.15f; // 30% diameter / 2
-        float maxRadius = juce::jmin(bounds.getWidth(), bounds.getHeight()) * 0.5f;
+        // Base size: 40% (Larger resting state)
+        // Max size: 110% (Explodes slightly beyond bounds for impact)
+        float minRadius = juce::jmin(bounds.getWidth(), bounds.getHeight()) * 0.20f; 
+        float maxRadius = juce::jmin(bounds.getWidth(), bounds.getHeight()) * 0.55f;
         
-        float currentRadius = minRadius + (maxRadius - minRadius) * smoothedRMS;
+        float currentRadius = minRadius + (maxRadius - minRadius) * sensitivity;
         
-        // Gradient Fill
+        // Richer Gradient Fill (V0.5)
+        // White Core -> Orange -> Blood Red -> Deep Purple -> Transparent
         juce::ColourGradient gradient(
-            juce::Colour(0xFFFF0000), // Center: Bright Blood Red
+            juce::Colour(0xFFFFFFCC), // Center: Intense White-Yellow
             center.x, center.y,
             juce::Colours::transparentBlack, // Edge: Transparent
             center.x, center.y - currentRadius, // Radial
             true // Radial
         );
         
-        gradient.addColour(0.0, juce::Colour(0xFFFF4444)); // Hot core
-        gradient.addColour(0.4, juce::Colour(0xFFFF0000)); // Red body
-        gradient.addColour(0.8, juce::Colour(0xFF550000)); // Dark edge
+        gradient.addColour(0.0, juce::Colour(0xFFFFFFCC)); // Core
+        gradient.addColour(0.2, juce::Colour(0xFFFF8800)); // Inner: Bright Orange
+        gradient.addColour(0.5, juce::Colour(0xFFFF0000)); // Mid: Blood Red
+        gradient.addColour(0.8, juce::Colour(0xFF330011)); // Outer: Deep Abyssal Purple
         gradient.addColour(1.0, juce::Colours::transparentBlack); // Fade out
 
         g.setGradientFill(gradient);

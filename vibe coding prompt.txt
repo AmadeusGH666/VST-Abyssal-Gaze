@@ -235,6 +235,13 @@ Type: Radial gradient starting from the center (417, 284).
 Please generate the code to implement this "Pulsing RMS Core" effect.
 
 
+------------------
+V0.5 Visualizer优化
+这个光球的动态太小，颜色也不够丰富，能否改进一下，版本更新为V0.5
+
+
+
+
 
 
 

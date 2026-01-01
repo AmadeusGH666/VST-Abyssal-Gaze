@@ -21,7 +21,13 @@ A dark, industrial, eldritch horror audio effect plugin built with JUCE.
 
 ## Changelog
 
-### V0.4.0 (Current)
+### V0.5.0 (Current)
+- **Visualizer Enhancement**: 
+    - **Dynamics**: Increased dynamic range (up to 110% size) and added non-linear sensitivity for more explosive reactivity.
+    - **Colors**: Upgraded to a multi-stop "Eldritch Fire" gradient (Intense White/Yellow Core -> Bright Orange -> Blood Red -> Deep Purple).
+- **Version Bump**: Project version updated to 0.5.0.
+
+### V0.4.0
 - **Living Visualizer**: Implemented a "Living Pupil" effect in the center abyss.
     - **Audio Reactive**: Pulses based on real-time audio RMS levels.
     - **Visual Style**: Radial gradient (Bright Blood Red core to Dark Red edge).
@@ -75,6 +81,12 @@ A dark, industrial, eldritch horror audio effect plugin built with JUCE.
 3. 在 `build/AbyssalGazeNew_artefacts/Release/VST3/` 中找到 VST3 文件。
 
 ## 更新日志 (Changelog)
+
+### V0.5.0 (当前版本)
+- **视觉效果增强**：
+    - **动态范围**：增加了动态范围（最大可达 110% 尺寸），并添加了非线性灵敏度，使反应更具爆发力。
+    - **色彩升级**：升级为多段 "Eldritch Fire" 渐变（高亮白/黄核心 -> 亮橙 -> 血红 -> 深紫）。
+- **版本升级**：项目版本更新至 0.5.0。
 
 ### V0.4.0 (当前版本)
 - **动态视觉效果**：在中心深渊实现了 "Living Pupil" (活体瞳孔) 效果。

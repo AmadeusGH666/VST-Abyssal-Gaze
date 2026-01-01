@@ -21,7 +21,14 @@ A dark, industrial, eldritch horror audio effect plugin built with JUCE.
 
 ## Changelog
 
-### V0.6.0 (Current)
+### V0.7.0 (Current)
+- **Visualizer FX**: Added "Particle Embers" and "Shockwaves" to the central abyss.
+    - **Particles**: Small dots drift outward from the core, accelerating with volume.
+    - **Shockwaves**: Transient detection triggers expanding rings on loud audio hits.
+    - **Combined**: Layers Core + Shockwaves + Particles for a complete "Living Abyss" effect.
+- **Version Bump**: Project version updated to 0.7.0.
+
+### V0.6.0
 - **Dynamic Color Palette**: The visualizer's color now shifts based on the **Corruption** (Distortion) parameter.
     - **Low Corruption**: Ice Blue / Cyan (Cold/Clean).
     - **High Corruption**: Magma Red / Orange (Hot/Distorted).
@@ -87,6 +94,13 @@ A dark, industrial, eldritch horror audio effect plugin built with JUCE.
 3. 在 `build/AbyssalGazeNew_artefacts/Release/VST3/` 中找到 VST3 文件。
 
 ## 更新日志 (Changelog)
+
+### V0.7.0 (当前版本)
+- **视觉特效 (Visualizer FX)**：在中心深渊添加了 "Particle Embers" (粒子余烬) 和 "Shockwaves" (冲击波)。
+    - **粒子 (Particles)**：小光点从核心向外漂移，随音量加速。
+    - **冲击波 (Shockwaves)**：瞬态检测会在大音量撞击时触发扩散的圆环。
+    - **组合效果**：核心 + 冲击波 + 粒子层叠，营造完整的 "Living Abyss" (活体深渊) 效果。
+- **版本升级**：项目版本更新至 0.7.0。
 
 ### V0.6.0 (当前版本)
 - **动态色彩**：Visualizer 的颜色现在会根据 **Corruption** (失真) 参数动态变化。

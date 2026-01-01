@@ -239,6 +239,25 @@ Please generate the code to implement this "Pulsing RMS Core" effect.
 V0.5 Visualizer优化
 这个光球的动态太小，颜色也不够丰富，能否改进一下，版本更新为V0.5
 
+------------
+V0.6
+现在再强化一下视觉的颜色，版本更新为V0.6   I want visualizer's color to change dynamically based on the "Corruption" (Distortion) parameter, creating a "Cold vs Hot" visual feedback.
+The Logic
+Instead of a static gradient, we will interpolate the color palette based on the Corruption knob value.
+Low Corruption (0.0) -> Ice Blue / Cyan (Clean/Cold).
+High Corruption (1.0) -> Magma Red / Orange (Distorted/Hot).
+Implementation Code
+In VisualizerComponent::paint(juce::Graphics& g):
+Get Parameter Value:
+Access the current value of the "Corruption" parameter from the processor's APVTS.
+float distortionVal = *processor.apvts.getRawParameterValue("id_corruption");
+Define Color Palettes:
+Cold Palette: Center=Colours::cyan, Mid=Colours::blue, Edge=Colours::transparent.
+Hot Palette: Center=Colours::white, Mid=Colours::red, Edge=Colours::transparent.
+Interpolate:
+juce::Colour centerColor = juce::Colours::cyan.interpolatedWith(juce::Colours::white, distortionVal);
+juce::Colour midColor = juce::Colours::blue.interpolatedWith(juce::Colours::red, distortionVal);
+
 
 
 

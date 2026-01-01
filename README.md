@@ -21,7 +21,13 @@ A dark, industrial, eldritch horror audio effect plugin built with JUCE.
 
 ## Changelog
 
-### V0.5.0 (Current)
+### V0.6.0 (Current)
+- **Dynamic Color Palette**: The visualizer's color now shifts based on the **Corruption** (Distortion) parameter.
+    - **Low Corruption**: Ice Blue / Cyan (Cold/Clean).
+    - **High Corruption**: Magma Red / Orange (Hot/Distorted).
+- **Version Bump**: Project version updated to 0.6.0.
+
+### V0.5.0
 - **Visualizer Enhancement**: 
     - **Dynamics**: Increased dynamic range (up to 110% size) and added non-linear sensitivity for more explosive reactivity.
     - **Colors**: Upgraded to a multi-stop "Eldritch Fire" gradient (Intense White/Yellow Core -> Bright Orange -> Blood Red -> Deep Purple).
@@ -81,6 +87,12 @@ A dark, industrial, eldritch horror audio effect plugin built with JUCE.
 3. 在 `build/AbyssalGazeNew_artefacts/Release/VST3/` 中找到 VST3 文件。
 
 ## 更新日志 (Changelog)
+
+### V0.6.0 (当前版本)
+- **动态色彩**：Visualizer 的颜色现在会根据 **Corruption** (失真) 参数动态变化。
+    - **低失真 (Low Corruption)**：冰蓝 / 青色 (冷色调/纯净)。
+    - **高失真 (High Corruption)**：岩浆红 / 橙色 (暖色调/失真)。
+- **版本升级**：项目版本更新至 0.6.0。
 
 ### V0.5.0 (当前版本)
 - **视觉效果增强**：

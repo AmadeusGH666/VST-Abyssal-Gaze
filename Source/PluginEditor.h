@@ -17,7 +17,8 @@
 class VisualizerComponent : public juce::Component, public juce::Timer
 {
 public:
-    VisualizerComponent(std::atomic<float>& rmsValue) : currentRMS(rmsValue)
+    VisualizerComponent(std::atomic<float>& rmsValue, std::atomic<float>* corruptionVal) 
+        : currentRMS(rmsValue), corruptionParam(corruptionVal)
     {
         startTimerHz(60);
     }
@@ -41,32 +42,45 @@ public:
         auto center = bounds.getCentre();
         
         // Enhanced Dynamics (V0.5)
-        // Use sqrt to make it more sensitive to lower volumes
         float sensitivity = std::sqrt(smoothedRMS); 
         
         // Dynamic Radius
-        // Base size: 40% (Larger resting state)
-        // Max size: 110% (Explodes slightly beyond bounds for impact)
         float minRadius = juce::jmin(bounds.getWidth(), bounds.getHeight()) * 0.20f; 
         float maxRadius = juce::jmin(bounds.getWidth(), bounds.getHeight()) * 0.55f;
-        
         float currentRadius = minRadius + (maxRadius - minRadius) * sensitivity;
         
-        // Richer Gradient Fill (V0.5)
-        // White Core -> Orange -> Blood Red -> Deep Purple -> Transparent
+        // Color Logic (V0.6): Cold vs Hot based on Corruption
+        float corruption = (corruptionParam != nullptr) ? corruptionParam->load() : 0.0f;
+        
+        // Define Palettes
+        // Cold (0.0): Cyan Core -> Blue Mid -> Transparent
+        // Hot (1.0): White Core -> Red Mid -> Transparent
+        
+        juce::Colour coldCore = juce::Colours::cyan;
+        juce::Colour coldMid  = juce::Colours::blue;
+        juce::Colour coldEdge = juce::Colours::transparentBlack;
+
+        juce::Colour hotCore  = juce::Colours::white;
+        juce::Colour hotMid   = juce::Colours::red;
+        juce::Colour hotEdge  = juce::Colours::transparentBlack;
+
+        // Interpolate
+        juce::Colour coreColor = coldCore.interpolatedWith(hotCore, corruption);
+        juce::Colour midColor  = coldMid.interpolatedWith(hotMid, corruption);
+        // Edge is always transparent, but maybe we want a slight tint? Let's keep it transparent for fade.
+        
+        // Gradient Fill
         juce::ColourGradient gradient(
-            juce::Colour(0xFFFFFFCC), // Center: Intense White-Yellow
+            coreColor,
             center.x, center.y,
-            juce::Colours::transparentBlack, // Edge: Transparent
-            center.x, center.y - currentRadius, // Radial
-            true // Radial
+            juce::Colours::transparentBlack,
+            center.x, center.y - currentRadius,
+            true
         );
         
-        gradient.addColour(0.0, juce::Colour(0xFFFFFFCC)); // Core
-        gradient.addColour(0.2, juce::Colour(0xFFFF8800)); // Inner: Bright Orange
-        gradient.addColour(0.5, juce::Colour(0xFFFF0000)); // Mid: Blood Red
-        gradient.addColour(0.8, juce::Colour(0xFF330011)); // Outer: Deep Abyssal Purple
-        gradient.addColour(1.0, juce::Colours::transparentBlack); // Fade out
+        gradient.addColour(0.0, coreColor);
+        gradient.addColour(0.5, midColor);
+        gradient.addColour(1.0, juce::Colours::transparentBlack);
 
         g.setGradientFill(gradient);
         g.fillEllipse(center.x - currentRadius, center.y - currentRadius, currentRadius * 2.0f, currentRadius * 2.0f);
@@ -74,6 +88,7 @@ public:
 
 private:
     std::atomic<float>& currentRMS;
+    std::atomic<float>* corruptionParam = nullptr;
     float smoothedRMS = 0.0f;
 };
 

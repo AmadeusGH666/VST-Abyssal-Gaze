@@ -13,7 +13,8 @@
 
 //==============================================================================
 AbyssalGazeNewAudioProcessorEditor::AbyssalGazeNewAudioProcessorEditor (AbyssalGazeNewAudioProcessor& p)
-    : AudioProcessorEditor (&p), audioProcessor (p), visualizer(p.currentRMS)
+    : AudioProcessorEditor (&p), audioProcessor (p), 
+      visualizer(p.currentRMS, p.apvts.getRawParameterValue(AbyssalGazeNewAudioProcessor::id_corruption))
 {
     // 1. Load Asset
     juce::File bgFile("d:/AI/antigravity/VST 20260101/background3transeye.png");

@@ -32,9 +32,9 @@ public:
         g.setColour(juce::Colours::black);
         g.fillEllipse(center.x - radius, center.y - radius, radius * 2.0f, radius * 2.0f);
 
-        // 2. The Knob Body: Dark Grey
+        // 2. The Knob Body: Opaque Black
         float knobRadius = radius * 0.72f; // 36px / 50px = 0.72
-        g.setColour(juce::Colours::darkgrey);
+        g.setColour(juce::Colours::black);
         g.fillEllipse(center.x - knobRadius, center.y - knobRadius, knobRadius * 2.0f, knobRadius * 2.0f);
 
         // 3. The Pointer: Blood Red
